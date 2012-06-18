@@ -23,7 +23,7 @@ def rand(a, b):
 # Make a matrix (we could use NumPy to speed this up)
 def makeMatrix(I, J, fill=0.0):
     m = []
-    for i in range(I):
+    for i in xrange(I):
         m.append([fill]*J)
     return m
 
@@ -80,11 +80,11 @@ class NN:
         self.wo = makeMatrix(self.nh, self.no)
         
         # set them to random vaules
-        for i in range(self.ni):
-            for j in range(self.nh):
+        for i in xrange(self.ni):
+            for j in xrange(self.nh):
                 self.wi[i][j] = rand(-1, 1)
-        for j in range(self.nh):
-            for k in range(self.no):
+        for j in xrange(self.nh):
+            for k in xrange(self.no):
                 self.wo[j][k] = rand(-1, 1)
 
         # last change in weights for momentum   
@@ -97,20 +97,20 @@ class NN:
             raise ValueError, 'wrong number of inputs'
 
         # input activations
-        for i in range(self.ni - 1):
+        for i in xrange(self.ni - 1):
             self.ai[i] = inputs[i]
 
         # hidden activations
-        for j in range(self.nh - 1):
+        for j in xrange(self.nh - 1):
             total = 0.0
-            for i in range(self.ni):
+            for i in xrange(self.ni):
                 total += self.ai[i] * self.wi[i][j]
             self.ah[j] = sigmoid(total)
 
         # output activations
-        for k in range(self.no):
+        for k in xrange(self.no):
             total = 0.0
-            for j in range(self.nh):
+            for j in xrange(self.nh):
                 total += self.ah[j] * self.wo[j][k]
             self.ao[k] = total
             if not self.regression:
@@ -126,7 +126,7 @@ class NN:
 
         # calculate error terms for output
         output_deltas = [0.0] * self.no
-        for k in range(self.no):
+        for k in xrange(self.no):
             output_deltas[k] = targets[k] - self.ao[k]
             if not self.regression:
                 output_deltas[k] = dsigmoid(self.ao[k]) * output_deltas[k]
@@ -134,29 +134,29 @@ class NN:
         
         # calculate error terms for hidden
         hidden_deltas = [0.0] * self.nh
-        for j in range(self.nh):
+        for j in xrange(self.nh):
             error = 0.0
-            for k in range(self.no):
+            for k in xrange(self.no):
                 error += output_deltas[k]*self.wo[j][k]
             hidden_deltas[j] = dsigmoid(self.ah[j]) * error
 
         # update output weights
-        for j in range(self.nh):
-            for k in range(self.no):
+        for j in xrange(self.nh):
+            for k in xrange(self.no):
                 change = output_deltas[k]*self.ah[j]
                 self.wo[j][k] = self.wo[j][k] + N*change + M*self.co[j][k]
                 self.co[j][k] = change
 
         # update input weights
-        for i in range(self.ni):
-            for j in range(self.nh):
+        for i in xrange(self.ni):
+            for j in xrange(self.nh):
                 change = hidden_deltas[j]*self.ai[i]
                 self.wi[i][j] = self.wi[i][j] + N*change + M*self.ci[i][j]
                 self.ci[i][j] = change
 
         # calculate error
         error = 0.0
-        for k in range(len(targets)):
+        for k in xrange(len(targets)):
             error += 0.5*((targets[k]-self.ao[k])**2)
         return error
 
@@ -173,11 +173,11 @@ class NN:
         
     def weights(self):
         print 'Input weights:'
-        for i in range(self.ni):
+        for i in xrange(self.ni):
             print self.wi[i]
         print
         print 'Output weights:'
-        for j in range(self.nh):
+        for j in xrange(self.nh):
             print self.wo[j]
 
     def train(self, patterns, iterations=1000, N=0.5, M=0.1, verbose = False):
@@ -207,7 +207,7 @@ def demoRegression():
     stepsize = (domain[1] - domain[0]) / ((steps - 1)*1.0)
 
     #Teach the network the function y = x**2
-    for i in range(steps):
+    for i in xrange(steps):
         x = domain[0] + stepsize * i
         y = x**2
         
